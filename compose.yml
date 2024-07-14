@@ -1,0 +1,29 @@
+services:
+  mysql:
+    container_name: mysql container
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql volume:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-init db.d/schema.sql
+      - ./user.sql:/docker-entrypoint-init db.d/user.sql
+
+  phpmyadmin:
+    container_name: containerisation
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 8081:80
+
+volumes:
+  mysql volume:
